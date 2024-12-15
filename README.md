@@ -1,2 +1,2 @@
 # kubectl-contextmgr
- A kubectl a plugin to interactively explore and manage context
+ A kubectl plugin to interactively explore and manage context

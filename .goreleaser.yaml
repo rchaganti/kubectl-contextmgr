@@ -1,0 +1,37 @@
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+- id: kubectl-contextmgr
+  main: ./main.go
+  env:
+  - CGO_ENABLED=0
+  goos:
+  - linux
+  - windows
+  goarch:
+  - amd64
+  ldflags:
+  # use commit date instead of current date as main.date
+  # only needed if you actually use those things in your main package, otherwise can be ignored.
+  - -s -w -X main.version={{.Version}} -X main.commit={{.ShortCommit}} -X main.date={{ .CommitDate }}
+
+archives:
+- builds:
+    - kubectl-contextmgr
+  format: tar.gz
+  name_template: "{{.ProjectName}}_{{.Tag}}_{{.Os}}_{{.Arch}}"
+  # use zip for windows archives
+  format_overrides:
+    - goos: windows
+      format: zip
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
